@@ -1,8 +1,5 @@
 // src/MeetingView.jsx
-import {
-  useMeeting,
-  useParticipant,
-} from "@videosdk.live/react-sdk";
+import { useMeeting, useParticipant } from "@videosdk.live/react-sdk";
 import { ROOM_B, TOKEN } from "./config";
 
 function ParticipantView({ participantId }) {
@@ -28,22 +25,24 @@ function ParticipantView({ participantId }) {
 }
 
 export default function MeetingView({ meetingId, switchRoom }) {
-const {
-  join,
-  leave,
-  participants,
-  startMediaRelay,
-  stopMediaRelay,
-  enableMic,
-  enableWebcam
-  } = useMeeting({
-  onMeetingJoined: () => {
-    console.log("Joined");
-    enableMic(); // mic is safe to auto-start
-  },
-  onMeetingLeft: () => console.log("Left"),
-});
 
+  const {
+    join,
+    leave,
+    participants,
+    startMediaRelay,
+    stopMediaRelay,
+    enableMic,
+    enableWebcam,
+  } = useMeeting({
+    onMeetingJoined: () => {
+      console.log("Joined");
+      enableMic(); // mic is safe to auto-start
+    },
+    onMeetingLeft: () => console.log("Left"),
+  });
+
+  
 
   return (
     <div>
@@ -72,7 +71,7 @@ const {
         onClick={() => {
           leave();
           setTimeout(() => {
-            switchRoom(ROOM_B);
+            switchRoom(meetingId);
           }, 500);
         }}
       >
@@ -83,7 +82,7 @@ const {
       <button
         onClick={() =>
           startMediaRelay({
-            meetingId: ROOM_B,
+            meetingId: meetingId,
             token: TOKEN,
             relayTracks: { audio: true, video: true },
           })
@@ -92,9 +91,7 @@ const {
         Start Media Relay to Room B
       </button>
 
-      <button onClick={() => stopMediaRelay(ROOM_B)}>
-        Stop Media Relay
-      </button>
+      <button onClick={() => stopMediaRelay(ROOM_B)}>Stop Media Relay</button>
 
       <div>
         {[...participants.keys()].map((id) => (
